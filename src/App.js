@@ -14,24 +14,20 @@ import api from './services/api';
 
 //=============================================================================>
 
-const [repository, setRepositories] = useState ([]);
-
-useEffect ( () => {
-  api.get ('repositories').then(response => {
-    setRepositories (response.data);
-  });
-}, [] );
-
-console.log(response.data)
-
-//=============================================================================>
-
 export default function App() {
+
+  const [repository, setRepositories] = useState ([]);
+
+  useEffect ( () => {
+    api.get ('repositories').then(response => {
+      setRepositories (response.data);
+    });
+  }, [] );
 
   async function handleLikeRepository(id) {
     const response = await api.post (`repositories/${id}`, {likes});
 
-    response.likes ++;
+    response.repository.likes ++;
 
 
     setRepositories ( [...repository, response.data] )
