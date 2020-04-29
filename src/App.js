@@ -25,12 +25,20 @@ export default function App() {
   }, [] );
 
   async function handleLikeRepository(id) {
-    const response = await api.post (`repositories/${id}`, {likes});
+    const response = await api.put (`repositories/${id}`);
 
-    response.repository.likes ++;
+    const { likes, techs, url, title } = response.data;
+    likes++;
+    const repositoryNew = { 
+      id, 
+      title, 
+      url,
+      techs,
+      likes,
+    };
 
 
-    setRepositories ( [...repository, response.data] )
+    setRepositories ( [...repository, repositoryNew] )
   }
   
 
@@ -69,10 +77,6 @@ export default function App() {
             </>
           )}
         >
-
-
-
-
         </FlatList>
       </SafeAreaView>
     </>
