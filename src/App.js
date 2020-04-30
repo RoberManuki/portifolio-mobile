@@ -25,20 +25,24 @@ export default function App() {
   }, [] );
 
   async function handleLikeRepository(id) {
-    const response = await api.put (`repositories/${id}`);
 
-    const { likes, techs, url, title } = response.data;
-    likes++;
-    const repositoryNew = { 
-      id, 
-      title, 
-      url,
-      techs,
-      likes,
-    };
+    const response = await api.post (`repositories/${id}/like`);
 
+    const index = repository.findIndex (repository => repository.id === id);
+    let copia = [...repository];
+    copia [index].likes = response.data.likes;
+    setRepositories ([...copia]);
+    
+    // const likes = response.data;
+    // const updateLikes = repository.map (repository => {
+    //   if (repository.id === id) {
+    //     return likes;
+    //   } else {
+    //     return repository;
+    //   }
+    // });    
+    // setRepositories (updateLikes);
 
-    setRepositories ( [...repository, repositoryNew] )
   }
   
 
@@ -58,21 +62,29 @@ export default function App() {
                 <Text style={styles.tech} > {item.techs} </Text>
               <View/>
 
+              {/* <View style={styles.techsContainer}>
+                {repository.techs.map(tech => (
+                  <Text key={tech} style={styles.tech}>
+                      {tech}
+                  </Text>
+                ))}
+              </View> */}
+
               <View style={styles.likesContainer}>
                 <Text
                   style={styles.likeText}
-                  testID={`repository-likes-${repository.id}`}
+                  testID={`repository-likes-${item.id}`}
               >
-                {repository.likes} curtidas
+                {item.likes} curtidas
                 </Text>
               </View>
 
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => handleLikeRepository(repository.id)}
-                testID={`like-button-${repository.id}`}
+                onPress={() => handleLikeRepository(item.id)}
+                testID={`like-button-${item.id}`}
               >
-                <Text style={styles.buttonText}>Curtir</Text>
+                <Text style={styles.buttonText}> Curtir </Text>
               </TouchableOpacity>
             </>
           )}
